@@ -1,0 +1,12 @@
+# Core (required for Mode A - heuristic baseline, always available)
+pandas>=1.5
+numpy>=1.23
+
+# Mode B (optional - only needed if training/using the XGBoost model)
+xgboost>=1.7
+
+# Optional - improves Mode B explainability (falls back gracefully if absent)
+shap>=0.44
+
+# Dev/testing only
+pytest>=7.0
