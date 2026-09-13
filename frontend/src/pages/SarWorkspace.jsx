@@ -38,14 +38,30 @@ import { api } from '../services/api'
 import { liveAnalysisStorage } from '../services/liveAnalysisStorage'
 import { transformAnalysisResponse } from '../utils/transformers'
 
+const DEFAULT_LAT = 19.05
+const DEFAULT_LON = 72.85
+const DEFAULT_RADIUS = 50.0
+
+/**
+ * Parses a numeric text input, falling back to a default ONLY when the
+ * input is empty or not a valid number. Using `Number(x) || fallback`
+ * is a bug: it silently discards legitimate values like 0 (e.g. the
+ * Equator, or a 0km radius) because 0 is falsy in JS.
+ */
+function parseNumericInput(value, fallback) {
+  if (value === '' || value === null || value === undefined) return fallback
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : fallback
+}
+
 function SarWorkspace() {
   const { incidents, liveIncidents, demoIncidents, loading: incidentsLoading, error: incidentsError } = useIncidents()
   const [selectedId, setSelectedId] = useState(null)
   const [selectedVesselId, setSelectedVesselId] = useState(null)
 
-  const [latInput, setLatInput] = useState('19.05')
-  const [lonInput, setLonInput] = useState('72.85')
-  const [radiusInput, setRadiusInput] = useState('50.0')
+  const [latInput, setLatInput] = useState(String(DEFAULT_LAT))
+  const [lonInput, setLonInput] = useState(String(DEFAULT_LON))
+  const [radiusInput, setRadiusInput] = useState(String(DEFAULT_RADIUS))
   const [spillIdInput, setSpillIdInput] = useState('')
   const [selectedFile, setSelectedFile] = useState(null)
   const [filePreviewUrl, setFilePreviewUrl] = useState(null)
@@ -63,24 +79,44 @@ function SarWorkspace() {
     }
   }, [incidents, selectedId])
 
+  // Revoke the previous object URL whenever it changes or the component
+  // unmounts, so we don't leak memory every time a new file is picked.
+  useEffect(() => {
+    return () => {
+      if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl)
+    }
+  }, [filePreviewUrl])
+
   const selectIncident = (id) => {
     setSelectedId(id)
     setSelectedVesselId(null)
+  }
+
+  const clearSelectedFile = () => {
+    setSelectedFile(null)
+    setFilePreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev)
+      return null
+    })
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const handleFileSelect = (event) => {
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Revoke any previous preview URL before creating a new one.
+    setFilePreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev)
+      return file.type.startsWith('image/') ? URL.createObjectURL(file) : null
+    })
+
     setSelectedFile(file)
     setAnalysisError(null)
 
-    if (file.type.startsWith('image/')) {
-      const url = URL.createObjectURL(file)
-      setFilePreviewUrl(url)
-    } else {
-      setFilePreviewUrl(null)
-    }
+    // Reset the input's value so selecting the SAME file again (e.g. after
+    // a failed analysis) still fires onChange next time.
+    event.target.value = ''
   }
 
   const handleRunAnalysis = async () => {
@@ -92,9 +128,9 @@ function SarWorkspace() {
     setAnalyzing(true)
     setAnalysisError(null)
 
-    const lat = Number(latInput) || 19.05
-    const lon = Number(lonInput) || 72.85
-    const radius = Number(radiusInput) || 50.0
+    const lat = parseNumericInput(latInput, DEFAULT_LAT)
+    const lon = parseNumericInput(lonInput, DEFAULT_LON)
+    const radius = parseNumericInput(radiusInput, DEFAULT_RADIUS)
     const spillId = spillIdInput.trim() || undefined
 
     try {
@@ -105,12 +141,20 @@ function SarWorkspace() {
         liveAnalysisStorage.saveLiveAnalysis(transformed)
         setSelectedId(transformed.incident.id)
         setSelectedVesselId(null)
+        // Clear the uploaded file/preview now that this analysis is done,
+        // so the form is ready for the next upload instead of showing
+        // stale state from the run that just completed.
+        clearSelectedFile()
       }
     } catch (err) {
       console.error('FastAPI SAR Analysis Error:', err)
+      // Support both axios-style errors (err.response.data.detail) and
+      // native fetch/Error-style errors (err.message), so the real
+      // backend validation message surfaces either way.
       const detail =
-        err.response?.data?.detail ||
-        err.message ||
+        err?.response?.data?.detail ||
+        err?.data?.detail ||
+        err?.message ||
         'Unable to connect to BlueTrace backend server at http://localhost:8000/api/v1.'
       setAnalysisError(`Live SAR Analysis Failed: ${detail}`)
     } finally {
@@ -164,9 +208,14 @@ function SarWorkspace() {
               />
 
               {filePreviewUrl ? (
-                <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-[#1d4b3b]">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  title={selectedFile ? `${selectedFile.name} — click to change` : 'Change file'}
+                  className="relative h-10 w-10 overflow-hidden rounded-lg border border-[#1d4b3b]"
+                >
                   <img src={filePreviewUrl} alt="SAR Preview" className="h-full w-full object-cover" />
-                </div>
+                </button>
               ) : (
                 <button
                   type="button"
@@ -177,6 +226,16 @@ function SarWorkspace() {
                   {selectedFile ? selectedFile.name : 'Select File'}
                 </button>
               )}
+
+              {selectedFile && (
+                <button
+                  type="button"
+                  onClick={clearSelectedFile}
+                  className="text-[10px] font-semibold text-[#a04a2f] underline"
+                >
+                  Clear
+                </button>
+              )}
             </div>
 
             {/* Inputs */}
@@ -185,6 +244,7 @@ function SarWorkspace() {
                 Lat:
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={latInput}
                   onChange={(e) => setLatInput(e.target.value)}
                   className="w-16 rounded border border-[#d6b9a7] bg-white px-1.5 py-1 text-xs font-mono"
@@ -194,6 +254,7 @@ function SarWorkspace() {
                 Lon:
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={lonInput}
                   onChange={(e) => setLonInput(e.target.value)}
                   className="w-16 rounded border border-[#d6b9a7] bg-white px-1.5 py-1 text-xs font-mono"
@@ -203,6 +264,7 @@ function SarWorkspace() {
                 Radius:
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={radiusInput}
                   onChange={(e) => setRadiusInput(e.target.value)}
                   placeholder="50"

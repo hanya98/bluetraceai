@@ -7,6 +7,28 @@ export const http = axios.create({
   baseURL,
 })
 
+/**
+ * FastAPI returns validation errors (HTTP 422) as:
+ *   { detail: [{ loc: [...], msg: "...", type: "..." }, ...] }
+ * rather than a plain string. Left as-is, interpolating err.response.data.detail
+ * into a template string prints "[object Object]" and hides the real problem.
+ * This interceptor flattens it into a single readable string, in place, so
+ * every caller of `api.*` can keep doing `err.response?.data?.detail` and get
+ * something a user can actually read.
+ */
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const detail = error.response?.data?.detail
+    if (Array.isArray(detail)) {
+      error.response.data.detail = detail
+        .map((d) => (d?.msg ? `${d.loc?.join('.') ?? 'field'}: ${d.msg}` : JSON.stringify(d)))
+        .join('; ')
+    }
+    return Promise.reject(error)
+  }
+)
+
 export const api = {
   // --- Live FastAPI BlueTrace Backend Endpoints ---
 
@@ -20,13 +42,18 @@ export const api = {
     if (lat !== undefined && lat !== null) formData.append('lat', lat)
     if (lon !== undefined && lon !== null) formData.append('lon', lon)
     if (spillId) formData.append('spill_id', spillId)
-    if (searchRadiusKm) formData.append('search_radius_km', searchRadiusKm)
+    if (searchRadiusKm !== undefined && searchRadiusKm !== null) {
+      formData.append('search_radius_km', searchRadiusKm)
+    }
 
-    const response = await http.post('/analyze', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    // IMPORTANT: do NOT set a Content-Type header here. FormData needs a
+    // multipart boundary (e.g. "multipart/form-data; boundary=----XYZ")
+    // that only the browser can generate. Setting the header manually to
+    // just 'multipart/form-data' strips that boundary and the backend's
+    // multipart parser silently fails to extract the file, usually
+    // surfacing as a 422 on the `file` field. Let axios/the browser set
+    // this header automatically instead.
+    const response = await http.post('/analyze', formData)
     return response.data
   },
 
