@@ -18,11 +18,12 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy installed dependencies and system libs
+# Runtime geospatial libraries (Debian Bookworm / Render)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgdal30 \
-    libgeos-c1v5 \
-    libproj22 \
+    gdal-bin \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/local /usr/local
@@ -33,4 +34,4 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
 ENV LOG_LEVEL=INFO
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
