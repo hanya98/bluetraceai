@@ -1,0 +1,22 @@
+# Backend
+backend/.venv/
+backend/__pycache__/
+backend/**/*.pyc
+backend/.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# VS Code / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+**/.ipynb_checkpoints/
+
+# YOLO checkpoint (Model 2 will be added later)
+backend/weights/best.pt
+backend/weights/*.pt

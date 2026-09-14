@@ -1,0 +1,66 @@
+[
+  {
+    "vessel_id": "413000111",
+    "timestamp_utc": "2026-09-12T04:00:00Z",
+    "latitude": 19.12,
+    "longitude": 72.92,
+    "speed_knots": 3.5,
+    "heading_deg": 225.0
+  },
+  {
+    "vessel_id": "413000111",
+    "timestamp_utc": "2026-09-12T04:30:00Z",
+    "latitude": 19.10,
+    "longitude": 72.90,
+    "speed_knots": 3.8,
+    "heading_deg": 225.0
+  },
+  {
+    "vessel_id": "413000111",
+    "timestamp_utc": "2026-09-12T05:00:00Z",
+    "latitude": 19.08,
+    "longitude": 72.88,
+    "speed_knots": 3.6,
+    "heading_deg": 225.0
+  },
+  {
+    "vessel_id": "413000111",
+    "timestamp_utc": "2026-09-12T05:30:00Z",
+    "latitude": 19.06,
+    "longitude": 72.86,
+    "speed_knots": 3.4,
+    "heading_deg": 225.0
+  },
+  {
+    "vessel_id": "413000222",
+    "timestamp_utc": "2026-09-12T04:00:00Z",
+    "latitude": 19.25,
+    "longitude": 73.05,
+    "speed_knots": 12.0,
+    "heading_deg": 90.0
+  },
+  {
+    "vessel_id": "413000222",
+    "timestamp_utc": "2026-09-12T05:00:00Z",
+    "latitude": 19.25,
+    "longitude": 73.25,
+    "speed_knots": 12.2,
+    "heading_deg": 90.0
+  },
+  {
+    "vessel_id": "413000333",
+    "timestamp_utc": "2026-09-12T03:30:00Z",
+    "latitude": 18.90,
+    "longitude": 72.70,
+    "speed_knots": 8.5,
+    "heading_deg": 310.0
+  },
+  {
+    "vessel_id": "413000333",
+    "timestamp_utc": "2026-09-12T04:30:00Z",
+    "latitude": 18.95,
+    "longitude": 72.75,
+    "speed_knots": 8.7,
+    "heading_deg": 310.0
+  }
+]
