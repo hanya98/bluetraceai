@@ -1,5 +1,6 @@
 # Multi-stage Dockerfile for BlueTrace FastAPI Backend
-FROM python:3.10-slim as builder
+
+FROM python:3.10-slim AS builder
 
 WORKDIR /app
 
@@ -12,17 +13,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt && \
-    pip uninstall -y opencv-python || true
 
-# Diagnostic check during Docker build stage
+# Install Python dependencies (CPU-only PyTorch)
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir \
+    --extra-index-url https://download.pytorch.org/whl/cpu \
+    -r requirements.txt
+
+# Diagnostics during build
 RUN python -c "import torch; print('PyTorch version:', torch.__version__); print('CUDA available:', torch.cuda.is_available())"
+RUN python -c "import cv2; print('OpenCV version:', cv2.__version__)"
 
 FROM python:3.10-slim
 
 WORKDIR /app
 
-# Runtime geospatial libraries (Debian Bookworm / Render)
+# Runtime geospatial libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gdal-bin \
     libgdal-dev \
@@ -33,12 +39,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/local /usr/local
 COPY . /app
 
-# Diagnostic check in runtime image
+# Runtime diagnostics
 RUN python -c "import torch; print('PyTorch version:', torch.__version__); print('CUDA available:', torch.cuda.is_available())"
-
-EXPOSE 8000
+RUN python -c "import cv2; print('OpenCV version:', cv2.__version__)"
 
 ENV PYTHONUNBUFFERED=1
 ENV LOG_LEVEL=INFO
+
+EXPOSE 8000
 
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
