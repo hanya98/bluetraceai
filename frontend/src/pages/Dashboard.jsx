@@ -860,7 +860,7 @@ function Dashboard() {
       {/* Response Resources Section */}
       <div className="rounded-2xl border border-[#e6c8b5] bg-white p-4 shadow-sm space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0ddd1] pb-2 text-xs">
-          <span className="font-bold tracking-[15em] text-[#1d4b3b] uppercase flex items-center gap-1.5">
+          <span className="font-bold tracking-[.15em] text-[#1d4b3b] uppercase flex items-center gap-1.5">
             <Anchor size={14} /> NEARBY RESPONSE RESOURCES & ASSETS
           </span>
           <span className="font-mono text-[10px] font-semibold text-[#846255]">
