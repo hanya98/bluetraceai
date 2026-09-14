@@ -32,6 +32,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     settings = get_settings()
     logger.info("Starting BlueTrace AI Backend lifespan...")
 
+    try:
+        import torch
+        logger.info(f"PyTorch Version: {torch.__version__} | CUDA available: {torch.cuda.is_available()}")
+    except ImportError:
+        logger.warning("PyTorch not installed in runtime environment.")
+
     # Load Model 1 (AttentionUNet)
     try:
         app.state.model1 = Model1Inference(
