@@ -92,6 +92,17 @@ function CompactKpiCard({ icon: Icon, label, value, sub, colorStyle }) {
   )
 }
 
+/* ─── Empty-state helper ─────────────────────────────────────────
+   One line, consistent styling, instead of a grid of repeated
+   "Not available" / "Disconnected" fields. */
+function EmptyNote({ children }) {
+  return (
+    <p className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] px-3 py-2 text-[11px] text-[#846255]">
+      {children}
+    </p>
+  )
+}
+
 function RegionIntelligencePanel({
   region,
   incident,
@@ -152,18 +163,18 @@ function RegionIntelligencePanel({
 
   if (!region) {
     return (
-      <aside className="flex h-full min-h-[600px] flex-col justify-between overflow-hidden rounded-2xl border border-[#2a4d6e] bg-[#0b1e2d] p-5 text-[#c8dcea] shadow-xl">
+      <aside className="flex h-full min-h-[600px] flex-col justify-between overflow-hidden rounded-2xl border border-[#e6c8b5] bg-white p-5 text-[#4d3328] shadow-sm">
         <div>
-          <p className="text-[10px] font-bold tracking-[.18em] text-[#4db6e8]">REGION INTELLIGENCE WORKSPACE</p>
-          <h3 className="mt-1 text-base font-bold text-[#e8f4fb]">Select a Monitoring Region</h3>
-          <p className="mt-2 text-xs leading-relaxed text-[#7aadcc]">
+          <p className="text-[10px] font-bold tracking-[.18em] text-[#1d4b3b]">REGION INTELLIGENCE WORKSPACE</p>
+          <h3 className="mt-1 font-serif text-base font-bold text-[#663520]">Select a Monitoring Region</h3>
+          <p className="mt-2 text-xs leading-relaxed text-[#735247]">
             Click any defined monitoring grid cell on the map to query Sentinel-1 satellite pass data, nearby AIS vessel traffic, and ocean weather context from the BlueTrace FastAPI engine.
           </p>
         </div>
-        <div className="rounded-xl border border-[#1a3450] bg-[#071d2f] p-4 text-center text-xs">
-          <Globe2 className="mx-auto mb-2 text-[#4db6e8]" size={24} />
-          <p className="text-[#e8f4fb] font-semibold">Global & Regional Marine Intelligence</p>
-          <p className="mt-1 text-[11px] text-[#7aadcc]">Navigate the map and select a monitoring region to begin</p>
+        <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-4 text-center text-xs">
+          <Globe2 className="mx-auto mb-2 text-[#1a6b9a]" size={24} />
+          <p className="text-[#663520] font-semibold">Global & Regional Marine Intelligence</p>
+          <p className="mt-1 text-[11px] text-[#846255]">Navigate the map and select a monitoring region to begin</p>
         </div>
       </aside>
     )
@@ -173,37 +184,37 @@ function RegionIntelligencePanel({
   const isDemoMatch = Boolean(incident && !incident.is_live_analysis)
 
   return (
-    <aside className="flex flex-col h-full min-h-[600px] max-h-[600px] overflow-hidden rounded-2xl border border-[#2a4d6e] bg-[#0b1e2d] text-[#c8dcea] shadow-xl">
+    <aside className="flex flex-col h-full min-h-[600px] max-h-[600px] overflow-hidden rounded-2xl border border-[#e6c8b5] bg-white text-[#4d3328] shadow-sm">
       {/* Panel Header */}
-      <div className="flex items-start justify-between border-b border-[#1a3450] bg-[#071d2f] px-4 py-3">
+      <div className="flex items-start justify-between border-b border-[#f0ddd1] bg-[#fffaf6] px-4 py-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold tracking-[.15em] text-[#4db6e8]">MONITORING REGION</span>
+            <span className="text-[10px] font-bold tracking-[.15em] text-[#1d4b3b]">MONITORING REGION</span>
             {isLiveMatch && (
               <span className="flex items-center gap-0.5 rounded bg-emerald-700 px-1.5 py-0.5 text-[8px] font-bold text-white">
                 <Zap size={7} /> LIVE ML
               </span>
             )}
             {isDemoMatch && (
-              <span className="rounded bg-[#2a4d6e]/40 px-1.5 py-0.5 text-[8px] font-bold text-[#8ab8d4]">
+              <span className="rounded bg-[#735247]/15 px-1.5 py-0.5 text-[8px] font-bold text-[#663520]">
                 STORED
               </span>
             )}
           </div>
-          <h3 className="mt-0.5 text-base font-bold text-[#e8f4fb]">{region.name}</h3>
-          <p className="text-[11px] text-[#7aadcc]">{region.zone}</p>
+          <h3 className="mt-0.5 font-serif text-base font-bold text-[#663520]">{region.name}</h3>
+          <p className="text-[11px] text-[#846255]">{region.zone}</p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg p-1.5 text-[#7aadcc] transition hover:bg-[#1a3450] hover:text-white"
+          className="rounded-lg p-1.5 text-[#846255] transition hover:bg-[#ead2c3] hover:text-[#4d3328]"
         >
           <X size={16} />
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-[#1a3450] bg-[#092236] px-3 py-1.5 text-[10px] font-bold overflow-x-auto">
+      <div className="flex gap-1 border-b border-[#f0ddd1] bg-[#fffaf6] px-3 py-1.5 text-[10px] font-bold overflow-x-auto">
         {[
           { id: 'overview', label: 'Overview', icon: Globe2 },
           { id: 'satellite', label: 'Satellite', icon: Radar },
@@ -219,7 +230,7 @@ function RegionIntelligencePanel({
             className={`flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 transition ${
               activeTab === id
                 ? 'bg-[#1a6b9a] text-white shadow-sm'
-                : 'text-[#7aadcc] hover:bg-[#122e47] hover:text-white'
+                : 'text-[#846255] hover:bg-[#ead2c3] hover:text-[#4d3328]'
             }`}
           >
             <Icon size={12} />
@@ -234,34 +245,34 @@ function RegionIntelligencePanel({
         {activeTab === 'overview' && (
           <div className="space-y-3">
             <section>
-              <p className="mb-1 text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">MONITORING REGION DETAILS</p>
+              <p className="mb-1 text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">MONITORING REGION DETAILS</p>
               <div className="grid grid-cols-2 gap-1.5">
-                <div className="rounded-lg bg-[#0f2438] p-2">
-                  <span className="text-[10px] text-[#7aadcc]">Region ID</span>
-                  <p className="font-mono font-semibold text-[#e8f4fb]">{region.id}</p>
+                <div className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] p-2">
+                  <span className="text-[10px] text-[#846255]">Region ID</span>
+                  <p className="font-mono font-semibold text-[#4d3328]">{region.id}</p>
                 </div>
-                <div className="rounded-lg bg-[#0f2438] p-2">
-                  <span className="text-[10px] text-[#7aadcc]">Coverage Zone</span>
-                  <p className="font-semibold text-[#e8f4fb] truncate">{region.zone}</p>
+                <div className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] p-2">
+                  <span className="text-[10px] text-[#846255]">Coverage Zone</span>
+                  <p className="font-semibold text-[#4d3328] truncate">{region.zone}</p>
                 </div>
-                <div className="rounded-lg bg-[#0f2438] p-2">
-                  <span className="text-[10px] text-[#7aadcc]">Center Coords</span>
-                  <p className="font-semibold text-[#e8f4fb]">{lat.toFixed(2)}°N, {lon.toFixed(2)}°E</p>
+                <div className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] p-2">
+                  <span className="text-[10px] text-[#846255]">Center Coords</span>
+                  <p className="font-semibold text-[#4d3328]">{lat.toFixed(2)}°N, {lon.toFixed(2)}°E</p>
                 </div>
-                <div className="rounded-lg bg-[#0f2438] p-2">
-                  <span className="text-[10px] text-[#7aadcc]">Search Radius</span>
-                  <p className="font-semibold text-[#e8f4fb]">{radiusKm} km</p>
+                <div className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] p-2">
+                  <span className="text-[10px] text-[#846255]">Search Radius</span>
+                  <p className="font-semibold text-[#4d3328]">{radiusKm} km</p>
                 </div>
               </div>
             </section>
 
             <section className="space-y-1">
-              <p className="mb-1 text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">BOUNDING BOX & COVERAGE</p>
-              <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">SW Coordinates</span><span className="font-semibold text-[#e8f4fb]">{minLat.toFixed(2)}°N, {minLon.toFixed(2)}°E</span></div>
-              <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">NE Coordinates</span><span className="font-semibold text-[#e8f4fb]">{maxLat.toFixed(2)}°N, {maxLon.toFixed(2)}°E</span></div>
-              <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Satellite Pass</span><span className="font-semibold text-[#e8f4fb]">{region.satellitePass}</span></div>
-              <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Vessel Density</span><span className="font-semibold text-[#e8f4fb]">{region.vesselDensity}</span></div>
-              <div className="flex justify-between py-1"><span className="text-[#7aadcc]">Detection Status</span><span className="font-semibold text-[#e8f4fb]">{incident ? 'Candidate scene active' : 'Awaiting analysis'}</span></div>
+              <p className="mb-1 text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">BOUNDING BOX & COVERAGE</p>
+              <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">SW Coordinates</span><span className="font-semibold text-[#4d3328]">{minLat.toFixed(2)}°N, {minLon.toFixed(2)}°E</span></div>
+              <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">NE Coordinates</span><span className="font-semibold text-[#4d3328]">{maxLat.toFixed(2)}°N, {maxLon.toFixed(2)}°E</span></div>
+              <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Satellite Pass</span><span className="font-semibold text-[#4d3328]">{region.satellitePass}</span></div>
+              <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Vessel Density</span><span className="font-semibold text-[#4d3328]">{region.vesselDensity}</span></div>
+              <div className="flex justify-between py-1"><span className="text-[#846255]">Detection Status</span><span className="font-semibold text-[#4d3328]">{incident ? 'Candidate scene active' : 'Awaiting analysis'}</span></div>
             </section>
           </div>
         )}
@@ -269,25 +280,27 @@ function RegionIntelligencePanel({
         {/* SATELLITE TAB */}
         {activeTab === 'satellite' && (
           <div className="space-y-2">
-            <p className="text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">SENTINEL-1 STAC SATELLITE SEARCH</p>
+            <p className="text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">SENTINEL-1 STAC SATELLITE SEARCH</p>
             {satLoading ? (
-              <div className="flex items-center gap-2 text-[#7aadcc] py-4">
+              <div className="flex items-center gap-2 text-[#846255] py-4">
                 <Loader2 className="animate-spin" size={14} /> Fetching satellite STAC metadata…
               </div>
+            ) : !satData ? (
+              <EmptyNote>No satellite scenes returned for this region — check Copernicus API credentials.</EmptyNote>
             ) : (
               <div className="space-y-1.5">
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Satellite / Mission</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.platform || satData?.mission, region.satellitePass)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Sensor / Instrument</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.sensor, 'C-band SAR (Sentinel-1 C-SAR)')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Available Scenes</span><span className="font-semibold text-[#e8f4fb]">{satData?.count !== undefined ? satData.count : 'Not available'}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Scene / Product ID</span><span className="font-mono text-[10px] font-semibold text-[#e8f4fb] truncate max-w-[160px]">{fmt(satData?.scene_id || satData?.product_id, 'Not available')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Acquisition Time</span><span className="font-semibold text-[#e8f4fb]">{fmtTime(satData?.acquisition_time)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Orbit / Pass</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.orbit_pass, 'Descending / Ascending')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Resolution</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.resolution, '10m x 10m (IW Spatial)')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Acquisition Mode</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.mode, 'IW (Interferometric Wide)')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Polarization</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.polarization, 'VV / VH Dual-Pol')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Cloud Coverage</span><span className="font-semibold text-[#e8f4fb]">{satData?.cloud_cover !== undefined ? `${satData.cloud_cover}%` : 'N/A (SAR All-Weather)'}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Data Source</span><span className="font-semibold text-[#e8f4fb]">{fmt(satData?.provider, 'Copernicus Sentinel STAC Catalog')}</span></div>
-                <div className="flex justify-between py-1"><span className="text-[#7aadcc]">Status</span><span className="font-semibold text-[#e8f4fb]">{satData ? 'Query successful' : 'No satellite scenes found for this region'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Satellite / Mission</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.platform || satData?.mission, region.satellitePass)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Sensor / Instrument</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.sensor, 'C-band SAR (Sentinel-1 C-SAR)')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Available Scenes</span><span className="font-semibold text-[#4d3328]">{satData?.count !== undefined ? satData.count : 'Not available'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Scene / Product ID</span><span className="font-mono text-[10px] font-semibold text-[#4d3328] truncate max-w-[160px]">{fmt(satData?.scene_id || satData?.product_id, 'Not available')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Acquisition Time</span><span className="font-semibold text-[#4d3328]">{fmtTime(satData?.acquisition_time)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Orbit / Pass</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.orbit_pass, 'Descending / Ascending')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Resolution</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.resolution, '10m x 10m (IW Spatial)')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Acquisition Mode</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.mode, 'IW (Interferometric Wide)')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Polarization</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.polarization, 'VV / VH Dual-Pol')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Cloud Coverage</span><span className="font-semibold text-[#4d3328]">{satData?.cloud_cover !== undefined ? `${satData.cloud_cover}%` : 'N/A (SAR All-Weather)'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Data Source</span><span className="font-semibold text-[#4d3328]">{fmt(satData?.provider, 'Copernicus Sentinel STAC Catalog')}</span></div>
+                <div className="flex justify-between py-1"><span className="text-[#846255]">Status</span><span className="font-semibold text-[#4d3328]">Query successful</span></div>
               </div>
             )}
           </div>
@@ -296,47 +309,42 @@ function RegionIntelligencePanel({
         {/* VESSELS TAB */}
         {activeTab === 'vessels' && (
           <div className="space-y-2">
-            <p className="text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">NEARBY AIS VESSELS OF INTEREST</p>
+            <p className="text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">NEARBY AIS VESSELS OF INTEREST</p>
             {vesselLoading ? (
-              <div className="flex items-center gap-2 text-[#7aadcc] py-4">
+              <div className="flex items-center gap-2 text-[#846255] py-4">
                 <Loader2 className="animate-spin" size={14} /> Querying AIS vessel feed…
               </div>
             ) : Array.isArray(vesselData?.vessels) && vesselData.vessels.length > 0 ? (
               <div className="space-y-2">
                 {vesselData.vessels.map((v, i) => (
-                  <div key={v.id || v.mmsi || i} className="rounded-lg bg-[#0f2438] p-2.5 space-y-1">
-                    <div className="flex items-center justify-between font-bold text-[#e8f4fb]">
+                  <div key={v.id || v.mmsi || i} className="rounded-lg bg-[#fffaf6] border border-[#ead2c3] p-2.5 space-y-1">
+                    <div className="flex items-center justify-between font-bold text-[#4d3328]">
                       <span className="flex items-center gap-1">
-                        <span className="rounded bg-[#1a6b9a] px-1.5 py-0.5 text-[9px]">#{i + 1}</span>
+                        <span className="rounded bg-[#1a6b9a] px-1.5 py-0.5 text-[9px] text-white">#{i + 1}</span>
                         {v.vessel_name || v.name || 'Vessel of Interest'}
                       </span>
-                      <span className="text-[10px] text-[#4db6e8]">MMSI {v.mmsi || 'N/A'}</span>
+                      <span className="text-[10px] text-[#1a6b9a]">MMSI {v.mmsi || 'N/A'}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-2 text-[10px] text-[#7aadcc]">
-                      <div>Type: <span className="text-[#e8f4fb]">{v.vessel_type || 'Commercial'}</span></div>
-                      <div>Speed: <span className="text-[#e8f4fb]">{v.speed !== undefined && v.speed !== null ? `${v.speed} kn` : 'Not available'}</span></div>
-                      <div>Heading: <span className="text-[#e8f4fb]">{v.heading !== undefined && v.heading !== null ? `${v.heading}°` : 'Not available'}</span></div>
-                      <div>AIS Gap: <span className="text-[#e8f4fb]">{v.ais_gap_minutes !== undefined && v.ais_gap_minutes !== null ? `${v.ais_gap_minutes} min` : 'Not available'}</span></div>
+                    <div className="grid grid-cols-2 gap-x-2 text-[10px] text-[#846255]">
+                      <div>Type: <span className="text-[#4d3328]">{v.vessel_type || 'Commercial'}</span></div>
+                      <div>Speed: <span className="text-[#4d3328]">{v.speed !== undefined && v.speed !== null ? `${v.speed} kn` : 'Not available'}</span></div>
+                      <div>Heading: <span className="text-[#4d3328]">{v.heading !== undefined && v.heading !== null ? `${v.heading}°` : 'Not available'}</span></div>
+                      <div>AIS Gap: <span className="text-[#4d3328]">{v.ais_gap_minutes !== undefined && v.ais_gap_minutes !== null ? `${v.ais_gap_minutes} min` : 'Not available'}</span></div>
                     </div>
                     {v.vessel_of_interest_score !== undefined && (
-                      <div className="flex justify-between text-[10px] pt-1 border-t border-[#1a3450]">
-                        <span className="text-[#7aadcc]">Attribution Score</span>
-                        <span className="font-bold text-amber-400">{Math.round(v.vessel_of_interest_score * 100)}%</span>
+                      <div className="flex justify-between text-[10px] pt-1 border-t border-[#f0ddd1]">
+                        <span className="text-[#846255]">Attribution Score</span>
+                        <span className="font-bold text-amber-700">{Math.round(v.vessel_of_interest_score * 100)}%</span>
                       </div>
                     )}
                     {v.explanation && (
-                      <p className="text-[9px] text-[#7aadcc] italic">{v.explanation}</p>
+                      <p className="text-[9px] text-[#846255] italic">{v.explanation}</p>
                     )}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="space-y-2 py-2">
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Search Radius</span><span className="font-semibold text-[#e8f4fb]">{radiusKm} km</span></div>
-                <p className="text-[11px] text-[#7aadcc]">
-                  No AIS vessel traffic data available for this region within radius.
-                </p>
-              </div>
+              <EmptyNote>No AIS vessel traffic found within {radiusKm} km of this region.</EmptyNote>
             )}
           </div>
         )}
@@ -344,16 +352,18 @@ function RegionIntelligencePanel({
         {/* ENVIRONMENT TAB */}
         {activeTab === 'environment' && (
           <div className="space-y-2">
-            <p className="text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">SURFACE OCEAN WEATHER & MARINE CONTEXT</p>
+            <p className="text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">SURFACE OCEAN WEATHER & MARINE CONTEXT</p>
             {weatherLoading ? (
-              <div className="flex items-center gap-2 text-[#7aadcc] py-4">
+              <div className="flex items-center gap-2 text-[#846255] py-4">
                 <Loader2 className="animate-spin" size={14} /> Querying Open-Meteo Marine & GFS vectors…
               </div>
+            ) : !weatherData ? (
+              <EmptyNote>Weather data unavailable for this region — check network connectivity or API status.</EmptyNote>
             ) : (
               <div className="space-y-1.5">
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Wind Speed</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Wind Speed</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.wind_speed_ms !== undefined && weatherData?.wind_speed_ms !== null
                       ? `${weatherData.wind_speed_ms} m/s`
                       : weatherData?.wind_speed !== undefined && weatherData?.wind_speed !== null
@@ -361,9 +371,9 @@ function RegionIntelligencePanel({
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Wind Direction</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Wind Direction</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.wind_direction_deg !== undefined && weatherData?.wind_direction_deg !== null
                       ? `${weatherData.wind_direction_deg}°`
                       : weatherData?.wind_direction !== undefined && weatherData?.wind_direction !== null
@@ -371,53 +381,53 @@ function RegionIntelligencePanel({
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Wave Height</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Wave Height</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.wave_height_m !== undefined && weatherData?.wave_height_m !== null
                       ? `${weatherData.wave_height_m} m`
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Wave Direction</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Wave Direction</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.wave_direction_deg !== undefined && weatherData?.wave_direction_deg !== null
                       ? `${weatherData.wave_direction_deg}°`
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Current Speed</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Current Speed</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.ocean_current_velocity_ms !== undefined && weatherData?.ocean_current_velocity_ms !== null
                       ? `${weatherData.ocean_current_velocity_ms} m/s`
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Current Direction</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Current Direction</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.ocean_current_direction_deg !== undefined && weatherData?.ocean_current_direction_deg !== null
                       ? `${weatherData.ocean_current_direction_deg}°`
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Sea Surface Temp</span>
-                  <span className="font-semibold text-[#e8f4fb]">
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Sea Surface Temp</span>
+                  <span className="font-semibold text-[#4d3328]">
                     {weatherData?.sea_surface_temperature_c !== undefined && weatherData?.sea_surface_temperature_c !== null
                       ? `${weatherData.sea_surface_temperature_c} °C`
                       : 'Not available'}
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]">
-                  <span className="text-[#7aadcc]">Weather Source</span>
-                  <span className="font-semibold text-[#e8f4fb]">{fmt(weatherData?.source, 'Open-Meteo Marine / GFS Model')}</span>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]">
+                  <span className="text-[#846255]">Weather Source</span>
+                  <span className="font-semibold text-[#4d3328]">{fmt(weatherData?.source, 'Open-Meteo Marine / GFS Model')}</span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-[#7aadcc]">Timestamp</span>
-                  <span className="font-semibold text-[#e8f4fb]">{fmtTime(weatherData?.timestamp)}</span>
+                  <span className="text-[#846255]">Timestamp</span>
+                  <span className="font-semibold text-[#4d3328]">{fmtTime(weatherData?.timestamp)}</span>
                 </div>
               </div>
             )}
@@ -427,24 +437,22 @@ function RegionIntelligencePanel({
         {/* ANALYSIS TAB */}
         {activeTab === 'analysis' && (
           <div className="space-y-2">
-            <p className="text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">DETECTION INTELLIGENCE & ML PREDICTION</p>
+            <p className="text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">DETECTION INTELLIGENCE & ML PREDICTION</p>
             {incident ? (
               <div className="space-y-1.5">
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Spill Detected</span><span className="font-semibold text-emerald-400">{incident.confidence > 0.5 ? 'YES' : 'NO'}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Detection Confidence</span><span className="font-semibold text-[#e8f4fb]">{fmtPct(incident.confidence)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Detection Model</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.provenance?.model_version, 'YOLO11n-oil-slick')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Spill Centroid</span><span className="font-semibold text-[#e8f4fb]">{incident.centroid ? `${incident.centroid[1].toFixed(3)}°N, ${incident.centroid[0].toFixed(3)}°E` : `${lat.toFixed(3)}°N, ${lon.toFixed(3)}°E`}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Surface Slick Extent</span><span className="font-semibold text-[#e8f4fb]">{incident.area_km2 !== undefined && incident.area_km2 !== null ? `${incident.area_km2} km²` : 'Not available'}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Oil Probability</span><span className="font-semibold text-[#e8f4fb]">{fmtPct(incident.confidence)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Lookalike Probability</span><span className="font-semibold text-[#e8f4fb]">{incident.look_alikes ? Object.entries(incident.look_alikes).map(([k, v]) => `${k.replace('_', ' ')}: ${v}`).join(', ') : 'Low / Evaluated'}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Classification</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.classification, 'Oil Slick')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Analysis ID</span><span className="font-mono text-[10px] font-semibold text-[#e8f4fb]">{incident.id}</span></div>
-                <div className="flex justify-between py-1"><span className="text-[#7aadcc]">Analysis Timestamp</span><span className="font-semibold text-[#e8f4fb]">{fmtTime(incident.detected_at)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Spill Detected</span><span className="font-semibold text-emerald-700">{incident.confidence > 0.5 ? 'YES' : 'NO'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Detection Confidence</span><span className="font-semibold text-[#4d3328]">{fmtPct(incident.confidence)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Detection Model</span><span className="font-semibold text-[#4d3328]">{fmt(incident.provenance?.model_version, 'YOLO11n-oil-slick')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Spill Centroid</span><span className="font-semibold text-[#4d3328]">{incident.centroid ? `${incident.centroid[1].toFixed(3)}°N, ${incident.centroid[0].toFixed(3)}°E` : `${lat.toFixed(3)}°N, ${lon.toFixed(3)}°E`}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Surface Slick Extent</span><span className="font-semibold text-[#4d3328]">{incident.area_km2 !== undefined && incident.area_km2 !== null ? `${incident.area_km2} km²` : 'Not available'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Oil Probability</span><span className="font-semibold text-[#4d3328]">{fmtPct(incident.confidence)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Lookalike Probability</span><span className="font-semibold text-[#4d3328]">{incident.look_alikes ? Object.entries(incident.look_alikes).map(([k, v]) => `${k.replace('_', ' ')}: ${v}`).join(', ') : 'Low / Evaluated'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Classification</span><span className="font-semibold text-[#4d3328]">{fmt(incident.classification, 'Oil Slick')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Analysis ID</span><span className="font-mono text-[10px] font-semibold text-[#4d3328]">{incident.id}</span></div>
+                <div className="flex justify-between py-1"><span className="text-[#846255]">Analysis Timestamp</span><span className="font-semibold text-[#4d3328]">{fmtTime(incident.detected_at)}</span></div>
               </div>
             ) : (
-              <p className="text-[11px] text-[#7aadcc] py-2">
-                Awaiting analysis. Select an incident candidate or navigate to Analyze SAR Image in top navigation to execute the pipeline.
-              </p>
+              <EmptyNote>Awaiting analysis. Select an incident candidate or run Analyze SAR Image from the top navigation.</EmptyNote>
             )}
           </div>
         )}
@@ -452,44 +460,40 @@ function RegionIntelligencePanel({
         {/* EVIDENCE TAB */}
         {activeTab === 'evidence' && (
           <div className="space-y-2">
-            <p className="text-[9px] font-bold tracking-[.14em] text-[#4db6e8]">PROVENANCE & EVIDENCE INTEGRITY</p>
+            <p className="text-[9px] font-bold tracking-[.14em] text-[#1d4b3b]">PROVENANCE & EVIDENCE INTEGRITY</p>
             {incident ? (
               <div className="space-y-1.5">
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Data Source</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.provenance?.data_source, 'Copernicus Sentinel-1')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Scene / Product ID</span><span className="font-mono text-[10px] font-semibold text-[#e8f4fb] truncate max-w-[160px]">{fmt(incident.provenance?.scene_id, incident.id)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Acquisition Time</span><span className="font-semibold text-[#e8f4fb]">{fmtTime(incident.provenance?.acquisition_time || incident.detected_at)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Analysis Timestamp</span><span className="font-semibold text-[#e8f4fb]">{fmtTime(incident.detected_at)}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">AI Model Used</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.provenance?.model_version, 'YOLO11n-oil-slick')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Polarization</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.sar?.polarization, 'VV')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Look Direction</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.sar?.look_direction, 'Right')}</span></div>
-                <div className="flex justify-between py-1 border-b border-[#1a3450]"><span className="text-[#7aadcc]">Processing Status</span><span className="font-semibold text-[#e8f4fb]">{fmt(incident.provenance?.processing_version, 'v1.0.0 (Complete)')}</span></div>
-                <div className="flex justify-between py-1"><span className="text-[#7aadcc]">Evidence Integrity</span><span className="font-bold text-emerald-400">{isLiveMatch ? 'LIVE / API DATA' : 'STORED / HISTORICAL RECORD'}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Data Source</span><span className="font-semibold text-[#4d3328]">{fmt(incident.provenance?.data_source, 'Copernicus Sentinel-1')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Scene / Product ID</span><span className="font-mono text-[10px] font-semibold text-[#4d3328] truncate max-w-[160px]">{fmt(incident.provenance?.scene_id, incident.id)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Acquisition Time</span><span className="font-semibold text-[#4d3328]">{fmtTime(incident.provenance?.acquisition_time || incident.detected_at)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Analysis Timestamp</span><span className="font-semibold text-[#4d3328]">{fmtTime(incident.detected_at)}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">AI Model Used</span><span className="font-semibold text-[#4d3328]">{fmt(incident.provenance?.model_version, 'YOLO11n-oil-slick')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Polarization</span><span className="font-semibold text-[#4d3328]">{fmt(incident.sar?.polarization, 'VV')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Look Direction</span><span className="font-semibold text-[#4d3328]">{fmt(incident.sar?.look_direction, 'Right')}</span></div>
+                <div className="flex justify-between py-1 border-b border-[#f0ddd1]"><span className="text-[#846255]">Processing Status</span><span className="font-semibold text-[#4d3328]">{fmt(incident.provenance?.processing_version, 'v1.0.0 (Complete)')}</span></div>
+                <div className="flex justify-between py-1"><span className="text-[#846255]">Evidence Integrity</span><span className="font-bold text-emerald-700">{isLiveMatch ? 'LIVE / API DATA' : 'STORED / HISTORICAL RECORD'}</span></div>
               </div>
             ) : (
-              <p className="text-[11px] text-[#7aadcc] py-2">
-                No SAR evidence loaded. Select a candidate or analyze a scene.
-              </p>
+              <EmptyNote>No SAR evidence loaded. Select a candidate or analyze a scene.</EmptyNote>
             )}
           </div>
         )}
-
-
       </div>
 
       {/* Action Footer */}
-      <div className="border-t border-[#1a3450] p-3 bg-[#071d2f] space-y-2">
+      <div className="border-t border-[#f0ddd1] p-3 bg-[#fffaf6] space-y-2">
         <div className="grid grid-cols-2 gap-1.5 text-[10px]">
           <button
             type="button"
             onClick={() => navigate('/vessels')}
-            className="flex items-center justify-center gap-1 rounded-lg bg-[#0f2d44] border border-[#1a4b6e] px-2 py-1.5 font-bold text-[#4db6e8] transition hover:bg-[#1a4b6e] hover:text-white"
+            className="flex items-center justify-center gap-1 rounded-lg bg-white border border-[#d6b9a7] px-2 py-1.5 font-bold text-[#1a6b9a] transition hover:bg-[#ead2c3]"
           >
             <Ship size={11} /> Vessel Analysis
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('evidence')}
-            className="flex items-center justify-center gap-1 rounded-lg bg-[#0f2d44] border border-[#1a4b6e] px-2 py-1.5 font-bold text-[#4db6e8] transition hover:bg-[#1a4b6e] hover:text-white"
+            className="flex items-center justify-center gap-1 rounded-lg bg-white border border-[#d6b9a7] px-2 py-1.5 font-bold text-[#1a6b9a] transition hover:bg-[#ead2c3]"
           >
             <Database size={11} /> Satellite Evidence
           </button>
@@ -523,7 +527,7 @@ function Dashboard() {
   const { incidents, liveIncidents, demoIncidents, loading: incidentsLoading, error: incidentsError } = useIncidents()
   const [selectedId, setSelectedId] = useState(null)
   const [selectedVesselId, setSelectedVesselId] = useState(null)
-  
+
   // Default to Northern Arabian Sea initial viewport
   const [selectedRegionId, setSelectedRegionId] = useState('REGION-AS-N')
   const [geoContext, setGeoContext] = useState(marineRegions[0])
@@ -633,6 +637,7 @@ function Dashboard() {
   const demoCount = demoIncidents.length
   const vesselCount = activeSelected.vessels?.length ?? 0
   const scenesAnalyzed = liveCount + demoCount
+  const needsReviewCount = incidents.filter((i) => i.status === 'Needs Verification').length
 
   const centerLat = geoContext.center[1]
   const centerLon = geoContext.center[0]
@@ -683,7 +688,10 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Command KPI Strip */}
+      {/* Command KPI Strip — single row, no duplicates. Swapped in
+          "Scenes Analyzed" (previously duplicated further down) in place
+          of the old "Operational Alerts" card, which mostly restated
+          the live-count badge already shown in the top bar. */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <CompactKpiCard
           icon={Waves}
@@ -700,18 +708,18 @@ function Dashboard() {
           colorStyle={{ bg: 'bg-sky-50', text: 'text-sky-700' }}
         />
         <CompactKpiCard
-          icon={AlertCircle}
-          label="OPERATIONAL ALERTS"
-          value={liveCount + (vesselCount > 0 ? 1 : 0)}
-          sub="Active system triggers"
-          colorStyle={{ bg: 'bg-rose-50', text: 'text-rose-700' }}
+          icon={Compass}
+          label="SCENES ANALYZED"
+          value={scenesAnalyzed}
+          sub={liveCount > 0 ? `${liveCount} FastAPI live` : 'Analyst pipeline'}
+          colorStyle={{ bg: 'bg-emerald-50', text: 'text-emerald-700' }}
         />
         <CompactKpiCard
-          icon={Compass}
+          icon={AlertCircle}
           label="REQUIRING REVIEW"
-          value={incidents.filter((i) => i.status === 'Needs Verification').length}
+          value={needsReviewCount}
           sub="Analyst queue"
-          colorStyle={{ bg: 'bg-emerald-50', text: 'text-emerald-700' }}
+          colorStyle={{ bg: 'bg-rose-50', text: 'text-rose-700' }}
         />
       </div>
 
@@ -732,9 +740,9 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Region Quick-Select Shortcuts Bar */}
-      <div className="flex items-center gap-1.5 overflow-x-auto rounded-xl border border-[#1a3450] bg-[#071d2f] p-2 text-xs text-[#c8dcea]">
-        <span className="shrink-0 text-[10px] font-bold tracking-[.15em] text-[#4db6e8] px-1 uppercase flex items-center gap-1">
+      {/* Region Quick-Select Shortcuts Bar — converted from navy to cream theme */}
+      <div className="flex items-center gap-1.5 overflow-x-auto rounded-xl border border-[#e6c8b5] bg-white p-2 text-xs shadow-sm">
+        <span className="shrink-0 text-[10px] font-bold tracking-[.15em] text-[#1d4b3b] px-1 uppercase flex items-center gap-1">
           <Globe2 size={12} /> Quick Select Region:
         </span>
         {marineRegions.map((r) => {
@@ -747,7 +755,7 @@ function Dashboard() {
               className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${
                 isSelected
                   ? 'bg-[#1a6b9a] text-white shadow-sm'
-                  : 'text-[#8ab8d4] hover:bg-[#122e47] hover:text-white'
+                  : 'text-[#735247] hover:bg-[#fffaf6]'
               }`}
             >
               {r.name}
@@ -756,32 +764,32 @@ function Dashboard() {
         })}
       </div>
 
-      {/* Operational Active Query & Context Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#2a4d6e] bg-[#0b1e2d] p-3 text-xs text-[#c8dcea] shadow-sm">
+      {/* Operational Active Query & Context Bar — converted from navy to cream theme */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#e6c8b5] bg-white p-3 text-xs shadow-sm">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <div>
-            <span className="text-[9px] font-bold tracking-wider text-[#4db6e8] uppercase">ACTIVE QUERY AREA</span>
-            <p className="font-bold text-[#e8f4fb]">{geoContext.name} <span className="font-normal text-[#7aadcc]">({geoContext.zone})</span></p>
+            <span className="text-[9px] font-bold tracking-wider text-[#1d4b3b] uppercase">ACTIVE QUERY AREA</span>
+            <p className="font-bold text-[#663520]">{geoContext.name} <span className="font-normal text-[#846255]">({geoContext.zone})</span></p>
           </div>
-          <div className="h-6 w-px bg-[#1a3450] hidden sm:block" />
+          <div className="h-6 w-px bg-[#f0ddd1] hidden sm:block" />
           <div>
-            <span className="text-[9px] font-bold tracking-wider text-[#4db6e8] uppercase">COORDINATES</span>
-            <p className="font-mono font-semibold text-[#e8f4fb]">{centerLat.toFixed(2)}°N, {centerLon.toFixed(2)}°E</p>
+            <span className="text-[9px] font-bold tracking-wider text-[#1d4b3b] uppercase">COORDINATES</span>
+            <p className="font-mono font-semibold text-[#4d3328]">{centerLat.toFixed(2)}°N, {centerLon.toFixed(2)}°E</p>
           </div>
-          <div className="h-6 w-px bg-[#1a3450] hidden sm:block" />
+          <div className="h-6 w-px bg-[#f0ddd1] hidden sm:block" />
           <div>
-            <span className="text-[9px] font-bold tracking-wider text-[#4db6e8] uppercase">BOUNDING BOX</span>
-            <p className="font-mono text-[11px] text-[#e8f4fb]">SW ({minLat.toFixed(1)}°, {minLon.toFixed(1)}°) to NE ({maxLat.toFixed(1)}°, {maxLon.toFixed(1)}°)</p>
+            <span className="text-[9px] font-bold tracking-wider text-[#1d4b3b] uppercase">BOUNDING BOX</span>
+            <p className="font-mono text-[11px] text-[#4d3328]">SW ({minLat.toFixed(1)}°, {minLon.toFixed(1)}°) to NE ({maxLat.toFixed(1)}°, {maxLon.toFixed(1)}°)</p>
           </div>
-          <div className="h-6 w-px bg-[#1a3450] hidden sm:block" />
+          <div className="h-6 w-px bg-[#f0ddd1] hidden sm:block" />
           <div>
-            <span className="text-[9px] font-bold tracking-wider text-[#4db6e8] uppercase">SEARCH RADIUS</span>
-            <p className="font-semibold text-[#e8f4fb]">{geoContext.radiusKm} km</p>
+            <span className="text-[9px] font-bold tracking-wider text-[#1d4b3b] uppercase">SEARCH RADIUS</span>
+            <p className="font-semibold text-[#4d3328]">{geoContext.radiusKm} km</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#7aadcc]">
+          <span className="text-[10px] text-[#846255]">
             Updated {fmtTime(lastRefreshed)}
           </span>
           <button
@@ -793,38 +801,6 @@ function Dashboard() {
             Refresh Intelligence
           </button>
         </div>
-      </div>
-
-      {/* 4 Compact KPI Cards */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <CompactKpiCard
-          icon={Globe2}
-          label="QUICK SHORTCUTS"
-          value={marineRegions.length}
-          sub="Global Maritime Shortcuts"
-          colorStyle={{ bg: 'bg-teal-50', text: 'text-teal-700' }}
-        />
-        <CompactKpiCard
-          icon={Waves}
-          label="POTENTIAL SPILL EVENTS"
-          value={spillEvents}
-          sub={liveCount > 0 ? `${liveCount} live · ${demoCount} historical` : `${demoCount} historical`}
-          colorStyle={{ bg: 'bg-amber-50', text: 'text-amber-700' }}
-        />
-        <CompactKpiCard
-          icon={Ship}
-          label="VESSELS TRACKED"
-          value={vesselCount > 0 ? vesselCount : '—'}
-          sub="AIS candidates"
-          colorStyle={{ bg: 'bg-sky-50', text: 'text-sky-700' }}
-        />
-        <CompactKpiCard
-          icon={Compass}
-          label="SCENES ANALYZED"
-          value={scenesAnalyzed}
-          sub={liveCount > 0 ? `${liveCount} FastAPI live` : 'Analyst pipeline'}
-          colorStyle={{ bg: 'bg-emerald-50', text: 'text-emerald-700' }}
-        />
       </div>
 
       {/* Main Operational Workspace: Map (65-70%) + Region Panel (30-35%) Side-by-Side */}
@@ -857,39 +833,19 @@ function Dashboard() {
         />
       </div>
 
-      {/* Response Resources Section */}
+      {/* Response Resources Section — collapsed to a single note instead
+          of 4 repeated "DATA SOURCE DISCONNECTED" cards, since none of
+          these feeds are wired up yet. */}
       <div className="rounded-2xl border border-[#e6c8b5] bg-white p-4 shadow-sm space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0ddd1] pb-2 text-xs">
           <span className="font-bold tracking-[.15em] text-[#1d4b3b] uppercase flex items-center gap-1.5">
-            <Anchor size={14} /> NEARBY RESPONSE RESOURCES & ASSETS
-          </span>
-          <span className="font-mono text-[10px] font-semibold text-[#846255]">
-            RESPONSE RESOURCE LAYER — DATA SOURCE NOT CONNECTED
+            <Anchor size={14} /> Nearby Response Resources & Assets
           </span>
         </div>
-
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 text-xs">
-          <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-2.5">
-            <p className="text-[10px] font-bold text-[#846255]">COAST GUARD UNITS</p>
-            <p className="mt-0.5 text-[11px] text-[#735247]">Patrol vessels & air station monitoring</p>
-            <p className="mt-1 font-mono text-[9px] text-[#a08070]">STATUS: DATA SOURCE DISCONNECTED</p>
-          </div>
-          <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-2.5">
-            <p className="text-[10px] font-bold text-[#846255]">RESPONSE VESSELS & TUGS</p>
-            <p className="mt-0.5 text-[11px] text-[#735247]">Containment & salvage craft</p>
-            <p className="mt-1 font-mono text-[9px] text-[#a08070]">STATUS: DATA SOURCE DISCONNECTED</p>
-          </div>
-          <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-2.5">
-            <p className="text-[10px] font-bold text-[#846255]">CONTAINMENT EQUIPMENT</p>
-            <p className="mt-0.5 text-[11px] text-[#735247]">Booms, skimmers & dispersant stock</p>
-            <p className="mt-1 font-mono text-[9px] text-[#a08070]">STATUS: DATA SOURCE DISCONNECTED</p>
-          </div>
-          <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-2.5">
-            <p className="text-[10px] font-bold text-[#846255]">OIL HANDLING FACILITIES</p>
-            <p className="mt-0.5 text-[11px] text-[#735247]">Port reception & recovery terminals</p>
-            <p className="mt-1 font-mono text-[9px] text-[#a08070]">STATUS: DATA SOURCE DISCONNECTED</p>
-          </div>
-        </div>
+        <EmptyNote>
+          Coast guard units, response vessels, containment equipment, and oil handling facilities require
+          a connected response-resource data source — not yet configured for this deployment.
+        </EmptyNote>
       </div>
 
       {/* Operational Status Footer */}
@@ -898,7 +854,7 @@ function Dashboard() {
           <span className="font-bold tracking-[.15em] text-[#1d4b3b]">LIVE OPERATIONAL DATA STATUS</span>
           <span className="text-[11px] text-[#735247]">FastAPI Engine: <b className="text-emerald-700">● Online / Connected</b></span>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 text-xs">
           <div className="rounded-xl border border-[#ead2c3] bg-[#fffaf6] p-2.5">
             <p className="text-[10px] font-bold text-[#846255]">SATELLITE STAC FEED</p>
