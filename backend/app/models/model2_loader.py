@@ -22,9 +22,11 @@ logger = logging.getLogger(__name__)
 try:
     from ultralytics import YOLO
     ULTRALYTICS_AVAILABLE = True
-except ImportError:
+    logger.info("Ultralytics imported successfully.")
+except Exception as e:
     ULTRALYTICS_AVAILABLE = False
     YOLO = None
+    logger.exception("Ultralytics import failed: %s", e)
 
 
 class Model2Inference:
