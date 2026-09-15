@@ -111,6 +111,7 @@ class Settings(BaseSettings):
             # Production Frontend
             "https://bluetraceai.vercel.app",
             "https://bluetrace-ai.vercel.app",
+            "https://blue-trace-ai-frontend.vercel.app",
 
             # Add your deployed frontend here if it's on Render
             # "https://your-frontend.onrender.com",
